@@ -106,7 +106,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif()
 
 # Boost packages
-set(BOOST_PACKAGES_REQUIRED chrono filesystem program_options thread)
+set(BOOST_PACKAGES_REQUIRED chrono filesystem program_options thread system)
 
 function(prepend var prefix)
 	set(listVar "")
@@ -119,7 +119,9 @@ endfunction(prepend)
 prepend(BOOST_LIBRARIES "Boost::" ${BOOST_PACKAGES_REQUIRED})
 
 find_package(Boost 1.58 REQUIRED ${BOOST_PACKAGES_REQUIRED})
-target_link_libraries(util univalue crypto ${BOOST_LIBRARIES})
+find_package(OpenSSL REQUIRED)
+
+target_link_libraries(util univalue crypto ${BOOST_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
 
 # Make sure boost uses std::atomic (it doesn't before 1.63)
 target_compile_definitions(util PUBLIC BOOST_SP_USE_STD_ATOMIC BOOST_AC_USE_STD_ATOMIC)
@@ -228,7 +230,7 @@ target_link_libraries(server
 )
 
 if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	target_link_libraries(server ${EVENT_PTHREAD_LIBRARY})
+	target_link_libraries(server ${EVENT_LIBRARY})
 endif()
 
 # Test suite.

@@ -5,7 +5,7 @@ add_executable(bench_bitcoin
         base58.cpp
         bench.cpp
         ccoins_caching.cpp
-        checkblock.cpp
+        #checkblock.cpp
         checkqueue.cpp
         coin_selection.cpp
         crypto_hash.cpp
